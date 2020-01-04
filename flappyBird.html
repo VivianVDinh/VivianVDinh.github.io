@@ -8,19 +8,16 @@
 <body>
   <h1>kill me</h1>
   <script type = "text/processing">
-      /*
-    Author: Vivian Dinh
-    */
     PImage bg, me, botPipe, topPipe,pressStart;
     int bgx,bgy, mx, my, g, Vmy;
     int[] pipeX, pipeY; //2 arrays
     int gameState;
     int score;
     PFont font;
+    /*
     import processing.sound.*;
-    SoundFile file;
-    String audioName = "snailhouse.mp3";
-    String path;
+    SoundFile song;
+    */
     //One time
     void setup()
     {
@@ -43,15 +40,16 @@
       }
       font = loadFont("ComicSansMS-48.vlw");
       gameState = -1;
-      path =sketchPath(audioName);
-      file = new SoundFile(this, path);
-      file.amp(0.2);
-      file.loop();
+      /*
+      song = new SoundFile(this, "snailhouse.mp3");
+      song.loop();
+      song.amp(0.2);
+      */
       score = 0;
     }
+    
     void draw()
     {
-      ellipse(20,20,20,20)
       if (gameState == -1)
       {
         startScreen();
@@ -63,7 +61,7 @@
         character();
         showScore();
       }
-      else if(gameState == 1)
+      else
       {
         textFont(font);
         textSize(50);
@@ -71,18 +69,19 @@
         text("GAME OVER", 450, 400);
         fill(0);
         text("Press to Play Again", 400,450);
-        if(mousePressed){
+        if(mousePressed)
+        {
           playAgain();
           showScore();
-          file.amp(0.0);
+          /*
+          song.amp(0.0);
+          */
         }
       }
     }
-  
     void mousePressed()
     {
       Vmy = -15;
-      
     }
     void setBg()
     {
@@ -137,7 +136,6 @@
       fill(255);
       text("Score: " + score , width - 150, 40);
     }
-    
     void startScreen()
     {
       image(pressStart, 0,0);
