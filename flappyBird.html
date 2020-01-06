@@ -17,10 +17,13 @@
 </head>
   
 <body>
+  <header>
+    <h1 class="poop">F l a p p y  B i r d</h1>
+  </header>
   <p>
        <h2 class="navbar">
        >
-       <a href = "http://vivianvdinh.codehs.me/">
+       <a href = "./index.hml">
             Homepage
         </a>
         >
@@ -35,147 +38,147 @@
         </h2>
   </p>
   <script type = "text/processing">
-    PImage bg, me, botPipe, topPipe,pressStart;
-    int bgx,bgy, mx, my, g, Vmy;
-    int[] pipeX, pipeY; //2 arrays
-    int gameState;
-    int score;
-    PFont font;
-    /*
-    import processing.sound.*;
-    SoundFile song;
-    */
-    //One time
-    void setup()
-    {
-      size(1200,800);
-      bg = loadImage("./img/sky.jpg");
-      me = loadImage("./img/me.png");
-      botPipe = loadImage("./img/pipe.png");
-      topPipe = loadImage("./img/toppipe.png");
-      pressStart = loadImage("./img/poopNachos.jpg");
-      mx = 100;
-      my = 50;
-      g = 1; //Gravity
-      pipeX = new int[6];//[0,0,0,0]
-      pipeY = new int[pipeX.length];
-      //Populate
-      for(int i = 0; i < pipeX.length; i++)
-      {
-        pipeX[i] = width + 200*i;
-        pipeY[i] = (int)random(-350, 0); 
-      }
-      font = loadFont("ComicSansMS-48.vlw");
-      gameState = -1;
+      PImage bg, me, botPipe, topPipe,pressStart;
+      int bgx,bgy, mx, my, g, Vmy;
+      int[] pipeX, pipeY; //2 arrays
+      int gameState;
+      int score;
+      PFont font;
       /*
-      song = new SoundFile(this, "snailhouse.mp3");
-      song.loop();
-      song.amp(0.2);
+      import processing.sound.*;
+      SoundFile song;
       */
-      score = 0;
-    }
-    
-    void draw()
-    {
-      if (gameState == -1)
+      //One time
+      void setup()
       {
-        startScreen();
+        size(1200,800);
+        bg = loadImage("./img/sky.jpg");
+        me = loadImage("./img/me.png");
+        botPipe = loadImage("./img/pipe.png");
+        topPipe = loadImage("./img/toppipe.png");
+        pressStart = loadImage("./img/poopNachos.jpg");
+        mx = 100;
+        my = 50;
+        g = 1; //Gravity
+        pipeX = new int[6];//[0,0,0,0]
+        pipeY = new int[pipeX.length];
+        //Populate
+        for(int i = 0; i < pipeX.length; i++)
+        {
+          pipeX[i] = width + 200*i;
+          pipeY[i] = (int)random(-350, 0); 
+        }
+        font = loadFont("ComicSansMS-48.vlw");
+        gameState = -1;
+        /*
+        song = new SoundFile(this, "snailhouse.mp3");
+        song.loop();
+        song.amp(0.2);
+        */
+        score = 0;
       }
-      else if(gameState == 0)
+      
+      void draw()
       {
-        setBg();
-        setPipes();
-        character();
-        showScore();
+        if (gameState == -1)
+        {
+          startScreen();
+        }
+        else if(gameState == 0)
+        {
+          setBg();
+          setPipes();
+          character();
+          showScore();
+        }
+        else
+        {
+          textFont(font);
+          textSize(50);
+          fill(255);
+          text("GAME OVER", 450, 400);
+          fill(0);
+          text("Press to Play Again", 400,450);
+          if(mousePressed)
+          {
+            playAgain();
+            showScore();
+            /*
+            song.amp(0.0);
+            */
+          }
+        }
       }
-      else
+      void mousePressed()
       {
-        textFont(font);
-        textSize(50);
+        Vmy = -15;
+      }
+      void setBg()
+      {
+        image(bg, bgx, bgy);
+        image(bg, bgx + bg.width, bgy);
+        bgx = bgx - 1;
+        if(bgx < -bg.width)
+        {
+          bgx = 0;
+        }
+      }
+      void character()
+      {
+        image(me, mx, my);
+        my = my + Vmy;
+        Vmy = Vmy + g;
+        if(my > height|| my < 0)
+        {
+          textFont(font);
+          fill(255);
+          text("bruh moment", 450, 50);
+          gameState = 1;
+        }
+      }
+      void setPipes()
+      {
+        for(int i = 0; i < pipeX.length; i++)
+        {
+          image(topPipe, pipeX[i],pipeY[i]);
+          image(botPipe, pipeX[i],pipeY[i] + 750);
+          pipeX[i]-= 2;
+          if(pipeX[i] < -200)
+          {
+            pipeX[i] = width;
+          }
+          if(mx > (pipeX[i]-64) && mx < pipeX[i] + 93)
+          {
+            if(!(my > pipeY[i] + 500 && my < pipeY[i] + (500 + 190)))
+            {
+              gameState = 1;
+            }
+            else if (mx == pipeX[i]|| mx == pipeX[i] + 1)
+            {
+              score++;
+            }
+          }
+        }
+      }
+      void showScore()
+      {
+        textSize(32);
         fill(255);
-        text("GAME OVER", 450, 400);
-        fill(0);
-        text("Press to Play Again", 400,450);
+        text("Score: " + score , width - 150, 40);
+      }
+      void startScreen()
+      {
+        image(pressStart, 0,0);
         if(mousePressed)
         {
-          playAgain();
-          showScore();
-          /*
-          song.amp(0.0);
-          */
+          my =height/2;
+          gameState = 0;
         }
       }
-    }
-    void mousePressed()
-    {
-      Vmy = -15;
-    }
-    void setBg()
-    {
-      image(bg, bgx, bgy);
-      image(bg, bgx + bg.width, bgy);
-      bgx = bgx - 1;
-      if(bgx < -bg.width)
+      void playAgain()
       {
-        bgx = 0;
+          setup();
       }
-    }
-    void character()
-    {
-      image(me, mx, my);
-      my = my + Vmy;
-      Vmy = Vmy + g;
-      if(my > height|| my < 0)
-      {
-        textFont(font);
-        fill(255);
-        text("bruh moment", 450, 50);
-        gameState = 1;
-      }
-    }
-    void setPipes()
-    {
-      for(int i = 0; i < pipeX.length; i++)
-      {
-        image(topPipe, pipeX[i],pipeY[i]);
-        image(botPipe, pipeX[i],pipeY[i] + 750);
-        pipeX[i]-= 2;
-        if(pipeX[i] < -200)
-        {
-          pipeX[i] = width;
-        }
-        if(mx > (pipeX[i]-64) && mx < pipeX[i] + 93)
-        {
-          if(!(my > pipeY[i] + 500 && my < pipeY[i] + (500 + 190)))
-          {
-            gameState = 1;
-          }
-          else if (mx == pipeX[i]|| mx == pipeX[i] + 1)
-          {
-            score++;
-          }
-        }
-      }
-    }
-    void showScore()
-    {
-      textSize(32);
-      fill(255);
-      text("Score: " + score , width - 150, 40);
-    }
-    void startScreen()
-    {
-      image(pressStart, 0,0);
-      if(mousePressed)
-      {
-        my =height/2;
-        gameState = 0;
-      }
-    }
-    void playAgain()
-    {
-        setup();
-    }
   </script>
   <canvas id = "sketch" style = "border: 1px solid black;"></canvas>
 </body>
